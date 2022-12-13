@@ -138,10 +138,6 @@ func LoadJVMLib(jvmLibPath string) error {
 	return nil
 }
 
-func RequireJVMGUILoop() bool {
-	return true
-}
-
-func RunJVMGUILoop() {
+func RunCFRLoop() {
 	C.jnigiRunCFRLoop()
 }
