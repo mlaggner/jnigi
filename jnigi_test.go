@@ -5,8 +5,8 @@
 package jnigi
 
 import (
-	"testing"
 	"runtime"
+	"testing"
 )
 
 var env *Env
@@ -25,7 +25,7 @@ func TestAll(t *testing.T) {
 	PTestEnsureLocalCapacity(t)
 	PTestPushPopLocalFrame(t)
 	PTestHandleException(t)
-	PTestCast(t)	
+	PTestCast(t)
 	PTestDestroy(t)
 }
 
@@ -181,7 +181,7 @@ func PTestAttach(t *testing.T) {
 			t.Fatal(err)
 		}
 		t.Logf("%d", v)
-		if err := jvm.DetachCurrentThread(); err != nil {
+		if err := jvm.DetachCurrentThread(nenv); err != nil {
 			t.Fatal(err)
 		}
 		runtime.UnlockOSThread()
@@ -320,7 +320,7 @@ func PTestByteArray(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	arr := NewArrayRef(Byte|Array)
+	arr := NewArrayRef(Byte | Array)
 	if err := str.CallMethod(env, "getBytes", arr, env.GetUTF8String()); err != nil {
 		t.Fatal(err)
 	}
@@ -524,5 +524,5 @@ func PTestCast(t *testing.T) {
 	var goBytes []byte
 	if err := c.Cast("java/lang/String").CallMethod(env, "getBytes", &goBytes, env.GetUTF8String()); err != nil {
 		t.Fatal(err)
-	}	
+	}
 }
