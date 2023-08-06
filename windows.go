@@ -57,7 +57,7 @@ func jni_CreateJavaVM(pvm unsafe.Pointer, penv unsafe.Pointer, args unsafe.Point
 func LoadJVMLib(jvmLibPath string) error {
 	cs := WCharPtrFromString(jvmLibPath)
 	defer free(cs)
-	libHandle := C.LoadLibrary(cs)
+	libHandle := C.LoadLibrary((*C.wchar_t)(cs))
 	if libHandle == nil {
 		return errors.New("could not dynamically load jvm.dll")
 	}
