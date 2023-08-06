@@ -9,12 +9,17 @@ package jnigi
 
 /*
 #include <jni.h>
-#include <windows.h>
 
 // we need to compile with unicode support on Windows
+#ifndef UNICODE
+#define UNICODE
+#endif
+
 #ifndef _UNICODE
 #define _UNICODE
 #endif
+
+#include <windows.h>
 
 typedef jint (*type_JNI_GetDefaultJavaVMInitArgs)(void*);
 
