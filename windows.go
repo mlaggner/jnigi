@@ -64,7 +64,7 @@ func LoadJVMLib(jvmLibPath string) error {
 
 	cs2 := cString("JNI_GetDefaultJavaVMInitArgs")
 	defer free(cs2)
-	ptr := C.GetProcAddress(libHandle, (*C.wchar_t)(cs2))
+	ptr := C.GetProcAddress(libHandle, (*C.char)(cs2))
 	if ptr == nil {
 		return errors.New("could not find JNI_GetDefaultJavaVMInitArgs in jvm.dll")
 	}
@@ -72,7 +72,7 @@ func LoadJVMLib(jvmLibPath string) error {
 
 	cs3 := cString("JNI_CreateJavaVM")
 	defer free(cs3)
-	ptr = C.GetProcAddress(libHandle, (*C.wchar_t)(cs3))
+	ptr = C.GetProcAddress(libHandle, (*C.char)(cs3))
 	if ptr == nil {
 		return errors.New("could not find JNI_CreateJavaVM in jvm.dll")
 	}
