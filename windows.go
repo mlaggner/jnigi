@@ -53,15 +53,15 @@ func LoadJVMLib(jvmLibPath string) error {
 	}
 
 	ptr, _ := windows.GetProcAddress(libHandle, "JNI_GetDefaultJavaVMInitArgs")
-	if ptr == nil {
+	if ptr == 0 {
 		return errors.New("could not find JNI_GetDefaultJavaVMInitArgs in jvm.dll")
 	}
-	C.var_JNI_GetDefaultJavaVMInitArgs = C.type_JNI_GetDefaultJavaVMInitArgs(ptr)
+	C.var_JNI_GetDefaultJavaVMInitArgs = C.type_JNI_GetDefaultJavaVMInitArgs(unsafe.Pointer(ptr))
 
 	ptr, _ = windows.GetProcAddress(libHandle, "JNI_CreateJavaVM")
-	if ptr == nil {
+	if ptr == 0 {
 		return errors.New("could not find JNI_CreateJavaVM in jvm.dll")
 	}
-	C.var_JNI_CreateJavaVM = C.type_JNI_CreateJavaVM(ptr)
+	C.var_JNI_CreateJavaVM = C.type_JNI_CreateJavaVM(unsafe.Pointer(ptr))
 	return nil
 }
