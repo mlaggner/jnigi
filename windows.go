@@ -9,16 +9,6 @@ package jnigi
 
 /*
 #include <jni.h>
-
-// we need to compile with unicode support on Windows
-#ifndef UNICODE
-#define UNICODE
-#endif
-
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-
 #include <windows.h>
 
 typedef jint (*type_JNI_GetDefaultJavaVMInitArgs)(void*);
@@ -57,13 +47,9 @@ func jni_CreateJavaVM(pvm unsafe.Pointer, penv unsafe.Pointer, args unsafe.Point
 
 // LoadJVMLib loads jvm.dll as specified in jvmLibPath
 func LoadJVMLib(jvmLibPath string) error {
-	cs, err := windows.UTF16PtrFromString(jvmLibPath)
+	libHandle, err := windows.LoadLibrary(jvmLibPath)
 	if err != nil {
-		return nil
-	}
-	libHandle := C.LoadLibrary((*C.wchar_t)(cs))
-	if libHandle == nil {
-		return errors.New("could not dynamically load jvm.dll")
+		return err
 	}
 
 	cs2 := cString("JNI_GetDefaultJavaVMInitArgs")
