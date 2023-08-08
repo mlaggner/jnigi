@@ -33,7 +33,6 @@ import "C"
 import (
 	"errors"
 	"unsafe"
-
 	"golang.org/x/sys/windows"
 )
 
@@ -47,21 +46,27 @@ func jni_CreateJavaVM(pvm unsafe.Pointer, penv unsafe.Pointer, args unsafe.Point
 
 // LoadJVMLib loads jvm.dll as specified in jvmLibPath
 func LoadJVMLib(jvmLibPath string) error {
+	// use the golang.org/x/sys/windows LoadLibrary function to handle paths with unicode characters
 	libHandle, err := windows.LoadLibrary(jvmLibPath)
 	if err != nil {
 		return err
 	}
+	cLibHandle := (*C.struct_HINSTANCE__)((unsafe.Pointer)(libHandle))
 
-	ptr, _ := windows.GetProcAddress(libHandle, "JNI_GetDefaultJavaVMInitArgs")
-	if ptr == 0 {
+	cs2 := cString("JNI_GetDefaultJavaVMInitArgs")
+	defer free(cs2)
+	ptr := C.GetProcAddress(cLibHandle, (*C.char)(cs2))
+	if ptr == nil {
 		return errors.New("could not find JNI_GetDefaultJavaVMInitArgs in jvm.dll")
 	}
-	C.var_JNI_GetDefaultJavaVMInitArgs = C.type_JNI_GetDefaultJavaVMInitArgs(unsafe.Pointer(ptr))
+	C.var_JNI_GetDefaultJavaVMInitArgs = C.type_JNI_GetDefaultJavaVMInitArgs(ptr)
 
-	ptr, _ = windows.GetProcAddress(libHandle, "JNI_CreateJavaVM")
-	if ptr == 0 {
+	cs3 := cString("JNI_CreateJavaVM")
+	defer free(cs3)
+	ptr = C.GetProcAddress(cLibHandle, (*C.char)(cs3))
+	if ptr == nil {
 		return errors.New("could not find JNI_CreateJavaVM in jvm.dll")
 	}
-	C.var_JNI_CreateJavaVM = C.type_JNI_CreateJavaVM(unsafe.Pointer(ptr))
+	C.var_JNI_CreateJavaVM = C.type_JNI_CreateJavaVM(ptr)
 	return nil
 }
